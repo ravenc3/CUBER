@@ -1,0 +1,270 @@
+const translations = {
+  tr: {
+    meta: {
+      title: 'CUBER — Build your legacy.',
+      description:
+        "CUBER, kişiye özel bilgisayarlar tasarlayan bağımsız bir atölyedir. Özenli tasarım, doğru bileşenler ve size göre hazırlanan sistemler.",
+    },
+    navigation: {
+      ariaLabel: 'Ana navigasyon',
+      menuOpen: 'Navigasyon menüsünü aç',
+      menuClose: 'Navigasyon menüsünü kapat',
+      home: 'CUBER ana sayfa',
+      selectedBuilds: 'Öne Çıkan Sistemler',
+      workshop: 'CUBER Atölyesi',
+      services: 'Neler Yapıyoruz',
+      standard: 'CUBER Standardı',
+      startBuild: 'Sisteminizi Oluşturalım',
+      language: 'Dil seçimi',
+    },
+    hero: {
+      imageAlt: 'Özel üretim, üst segment bir bilgisayar sisteminin atmosferik görünümü',
+      kicker: 'Bağımsız PC atölyesi',
+      description: 'İhtiyacınıza göre tasarlanan, özenle toplanan bilgisayarlar. Çalışma ve oyun alışkanlıklarınız için.',
+      explore: 'Sistemleri keşfedin',
+      caption: 'Atölyede tasarlandı',
+      imagePosition: '01 / 04',
+    },
+    selectedBuilds: {
+      eyebrow: 'Seçili çalışmalar',
+      title: 'Özenle tasarlandı.\nSize göre toplandı.',
+      description:
+        'Her CUBER sistemi, önce sizi dinleyerek şekillenir. Atölyemizde hayata geçen birkaç örnek.',
+      count: '01 — {count}',
+      enquire: '{name} hakkında bilgi alın',
+      specsLabel: '{name} teknik özellikleri',
+      moreSpecs: '+ {count} teknik özellik daha',
+      lightbox: {
+        title: '{name} görseli',
+        close: 'Görseli kapat',
+        previous: 'Önceki görsel',
+        next: 'Sonraki görsel',
+      },
+      specLabels: {
+        cpu: 'CPU',
+        gpu: 'GPU',
+        motherboard: 'Anakart',
+        ram: 'RAM',
+        storage: 'Depolama',
+        cpuCooler: 'CPU Soğutucu',
+        pcCase: 'Kasa',
+        caseFans: 'Kasa Fanları',
+        psu: 'Güç Kaynağı',
+      },
+      loading: 'Sistemler yükleniyor…',
+      empty: 'Seçili sistemlerimiz yakında burada olacak.',
+      loadError: 'Sistemler şu anda yüklenemiyor:',
+      configurationError: 'Sistem kataloğu şu anda kullanılamıyor.',
+    },
+    workshop: {
+      imageAlt: 'Düzenli bir atölye tezgâhında özenle çalışan usta',
+      imageLabel: 'CUBER atölyesi / 51°30\'26.4"N',
+      eyebrow: 'Seri üretim değil, el işçiliği',
+      title: 'CUBER Atölyesi',
+      description:
+        'İyi bir bilgisayarın, üzerinde ürettiğiniz işler kadar özenli olması gerektiğine inanıyoruz. Her sistemi bağımsız atölyemizde elle topluyor, ayarlıyor ve test ediyoruz.',
+      link: 'Atölyemizi tanıyın',
+    },
+    services: {
+      eyebrow: 'Neler yapıyoruz',
+      title: 'Size göre tasarlanır.\nÖzenle hayata geçer.',
+      description: 'Tek bir atölye, uzman görüşü ve hazır kalıplara sığmayan çözümler.',
+      items: [
+        {
+          title: 'Kişiye özel PC',
+          description: 'İhtiyaçlarınıza, kullanım alanınıza ve bütçenize göre tasarlanan sistem.',
+        },
+        {
+          title: 'Sistem planlama',
+          description: 'Parçalar sipariş edilmeden önce doğru bileşenler ve net bir yol haritası.',
+        },
+        {
+          title: 'Yükseltme ve bakım',
+          description: 'Özenle planlanan yükseltmeler, bakım ve sisteminiz için uzman desteği.',
+        },
+      ],
+    },
+    process: {
+      eyebrow: 'Üretim sürecimiz',
+      title: 'PC toplama süreci',
+      intro: 'İlk fikirden ilk açılışa kadar şeffaf ve birlikte ilerleyen bir süreç.',
+      steps: [
+        {
+          title: 'Önceliklerinizi dinliyoruz',
+          description: 'Nasıl çalıştığınızı, neler oynadığınızı ve sisteminizden ne beklediğinizi konuşuyoruz.',
+        },
+        {
+          title: 'Sistemi birlikte planlıyoruz',
+          description: 'İhtiyacınıza uygun parça listesi, anlaşılır seçenekler ve işe başlamadan net bir plan.',
+        },
+        {
+          title: 'Özenle topluyor, ayarlıyoruz',
+          description: 'Bilgisayarınız elle toplanır; kablo düzeni, performans ayarları ve testleri tamamlanır.',
+        },
+        {
+          title: 'Kullanıma hazır teslim ediyoruz',
+          description: 'Sisteminizi teslim eder, ihtiyaçlarınız değiştikçe desteğimizi sürdürürüz.',
+        },
+      ],
+    },
+    about: {
+      eyebrow: 'Çalışma anlayışımız',
+      established: 'CUBER / 2018’DEN BERİ',
+      titleFirst: 'CUBER',
+      titleSecond: 'Standardı',
+      lead: 'CUBER, ayrıntılara önem verenler için bağımsız bir PC atölyesidir.',
+      description:
+        'Özenli tasarımı, güvenilir mühendisliği ve ürün kataloglarında kolayca bulamayacağınız kişisel hizmeti bir araya getiriyoruz. Hazır şablonlar yok, gereksiz gösteriş yok. Yalnızca sizin için, işini önemseyen insanlar tarafından hazırlanan bir bilgisayar.',
+      link: 'Bizi daha yakından tanıyın',
+    },
+    contact: {
+      eyebrow: 'Aklınızda bir sistem var mı?',
+      titleFirst: 'Sisteminizi',
+      titleSecond: 'Birlikte Kuralım',
+      description: 'Yeni bilgisayarınızdan beklentilerinizi anlatın. Gerisini birlikte planlayalım.',
+      button: 'Projeyi konuşalım',
+      email: 'hello@cuber.work',
+    },
+    footer: {
+      tagline: 'Bağımsız tasarım. Özenle toplanan sistemler.',
+      backToTop: 'Başa dön',
+      copyright: '© {year} CUBER Atölyesi',
+      home: 'CUBER ana sayfa',
+    },
+  },
+  en: {
+    meta: {
+      title: 'CUBER — Build your legacy.',
+      description:
+        'CUBER is an independent custom PC workshop. Thoughtful design, considered components, and bespoke builds made around you.',
+    },
+    navigation: {
+      ariaLabel: 'Main navigation',
+      menuOpen: 'Open navigation menu',
+      menuClose: 'Close navigation menu',
+      home: 'CUBER home',
+      selectedBuilds: 'Selected Builds',
+      workshop: 'Inside CUBER',
+      services: 'What We Build',
+      standard: 'The CUBER Standard',
+      startBuild: 'Start Your Build',
+      language: 'Select language',
+    },
+    hero: {
+      imageAlt: 'Atmospheric view of a premium custom PC build',
+      kicker: 'Independent PC workshop',
+      description: 'Custom-built PCs, made with intent. Designed around the way you work and play.',
+      explore: 'Explore our builds',
+      caption: 'Engineered in the workshop',
+      imagePosition: '01 / 04',
+    },
+    selectedBuilds: {
+      eyebrow: 'Selected work',
+      title: 'Designed with intent.\nBuilt around you.',
+      description:
+        'Every CUBER build starts with a conversation. These are a few outcomes from the workshop.',
+      count: '01 — {count}',
+      enquire: 'Enquire about {name}',
+      specsLabel: '{name} highlights',
+      moreSpecs: '+ {count} more specifications',
+      lightbox: {
+        title: '{name} image',
+        close: 'Close image',
+        previous: 'Previous image',
+        next: 'Next image',
+      },
+      specLabels: {
+        cpu: 'CPU',
+        gpu: 'GPU',
+        motherboard: 'Motherboard',
+        ram: 'RAM',
+        storage: 'Storage',
+        cpuCooler: 'CPU Cooler',
+        pcCase: 'Case',
+        caseFans: 'Case Fans',
+        psu: 'Power Supply',
+      },
+      loading: 'Loading builds…',
+      empty: 'Selected builds will be featured here soon.',
+      loadError: 'Builds could not be loaded:',
+      configurationError: 'The build catalogue is not available right now.',
+    },
+    workshop: {
+      imageAlt: 'A craftsperson carefully working at a well-equipped studio bench',
+      imageLabel: 'The workshop / 51°30\'26.4"N',
+      eyebrow: 'Made by hand, not by numbers',
+      title: 'Inside CUBER',
+      description:
+        'We believe a great PC should feel as considered as the work you create on it. Every machine is assembled, tuned, and tested by hand in our independent workshop.',
+      link: 'Step inside',
+    },
+    services: {
+      eyebrow: 'What we do',
+      title: 'Personal by nature.\nPrecise by design.',
+      description: 'One workshop, considered advice, and no off-the-shelf shortcuts.',
+      items: [
+        {
+          title: 'Bespoke builds',
+          description: 'A complete custom PC, planned around your priorities, space, and budget.',
+        },
+        {
+          title: 'Build planning',
+          description: 'Expert component selection and a clear plan before a single part is ordered.',
+        },
+        {
+          title: 'Upgrades & care',
+          description: 'Thoughtful upgrades, maintenance, and a second opinion on your setup.',
+        },
+      ],
+    },
+    process: {
+      eyebrow: 'Our process',
+      title: 'The Build Process',
+      intro: 'A clear, collaborative process from first thought to first power-on.',
+      steps: [
+        {
+          title: 'Tell us what matters',
+          description: 'We start with how you work, what you play, and what you want your PC to feel like.',
+        },
+        {
+          title: 'We shape the build',
+          description: 'A considered parts list, clear options, and no surprises before we begin.',
+        },
+        {
+          title: 'Built & balanced',
+          description: 'Your PC is assembled, cable-managed, tuned, and tested by hand.',
+        },
+        {
+          title: 'Ready for what’s next',
+          description: 'We deliver your finished build and stay on hand as your needs evolve.',
+        },
+      ],
+    },
+    about: {
+      eyebrow: 'How we work',
+      established: 'CUBER / EST. 2018',
+      titleFirst: 'The CUBER',
+      titleSecond: 'Standard',
+      lead: 'CUBER is an independent PC workshop for people who care about the details.',
+      description:
+        'We bring together thoughtful design, dependable engineering, and the kind of personal service that gets lost in a product catalogue. No templates. No needless noise. Just a PC built for you, by people who care how it comes together.',
+      link: 'Get to know us',
+    },
+    contact: {
+      eyebrow: 'Have something in mind?',
+      titleFirst: 'Start Your',
+      titleSecond: 'Build',
+      description: 'Tell us what you need from your next PC. We’ll take it from there.',
+      button: 'Start a conversation',
+      email: 'hello@cuber.work',
+    },
+    footer: {
+      tagline: 'Independent by design. Built to perform.',
+      backToTop: 'Back to top',
+      copyright: '© {year} CUBER Workshop',
+      home: 'CUBER home',
+    },
+  },
+}
+
+export default translations
