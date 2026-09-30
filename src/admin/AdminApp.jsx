@@ -39,7 +39,7 @@ function AdminApp() {
 
         const authenticatedUser = await supabase.getUser()
         if (!active) return
-        if (!(await supabase.isAdmin(authenticatedUser.id))) {
+        if (!(await supabase.isAdmin())) {
           await supabase.signOut()
           setError('This account does not have CUBER admin access.')
           return
@@ -48,8 +48,13 @@ function AdminApp() {
         await loadBuilds()
       } catch (sessionError) {
         if (active) {
-          await supabase.signOut()
-          setError(sessionError.message)
+          let message = sessionError.message
+          try {
+            await supabase.signOut()
+          } catch (signOutError) {
+            message = `${message} Signing out also failed: ${signOutError.message}`
+          }
+          if (active) setError(message)
         }
       } finally {
         if (active) setLoading(false)
@@ -72,7 +77,7 @@ function AdminApp() {
         String(formData.get('email')),
         String(formData.get('password')),
       )
-      if (!authenticatedUser || !(await supabase.isAdmin(authenticatedUser.id))) {
+      if (!authenticatedUser || !(await supabase.isAdmin())) {
         await supabase.signOut()
         throw new Error('This account does not have CUBER admin access.')
       }

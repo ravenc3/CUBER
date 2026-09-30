@@ -1,18 +1,5 @@
 create extension if not exists pgcrypto;
 
-create table if not exists public.admin_users (
-  user_id uuid primary key references auth.users(id) on delete cascade
-);
-
-alter table public.admin_users enable row level security;
-revoke all on public.admin_users from anon, authenticated;
-grant select on public.admin_users to authenticated;
-
-drop policy if exists "Admins can verify their own access" on public.admin_users;
-create policy "Admins can verify their own access"
-  on public.admin_users for select to authenticated
-  using (user_id = (select auth.uid()));
-
 create or replace function public.is_cuber_admin()
 returns boolean
 language sql
@@ -22,12 +9,13 @@ set search_path = ''
 as $$
   select exists (
     select 1
-    from public.admin_users
-    where user_id = (select auth.uid())
+    from auth.users
+    where id = (select auth.uid())
+      and lower(email) = 'mr.medel.2002@gmail.com'
   );
 $$;
 
-revoke all on function public.is_cuber_admin() from public;
+revoke all on function public.is_cuber_admin() from public, anon;
 grant execute on function public.is_cuber_admin() to authenticated;
 
 create table if not exists public.builds (

@@ -5,15 +5,28 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
+const clientKey = '__cuberSupabaseClient'
 const client = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+  ? (globalThis[clientKey] ??= createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true,
       },
-    })
+    }))
   : null
+
+function withTimeout(promise, operation) {
+  let timeoutId
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(`${operation} timed out after 10 seconds.`)),
+      10_000,
+    )
+  })
+
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId))
+}
 
 function getClient() {
   if (!client) {
@@ -24,7 +37,7 @@ function getClient() {
 
 export const supabase = {
   async getSession() {
-    const { data, error } = await getClient().auth.getSession()
+    const { data, error } = await withTimeout(getClient().auth.getSession(), 'Checking the Supabase session')
     if (error) throw error
     return data.session
   },
@@ -36,31 +49,33 @@ export const supabase = {
   },
 
   async signOut() {
-    const { error } = await getClient().auth.signOut()
+    const { error } = await withTimeout(getClient().auth.signOut(), 'Signing out of Supabase')
     if (error) throw error
   },
 
   async getUser() {
-    const { data, error } = await getClient().auth.getUser()
+    const { data, error } = await withTimeout(getClient().auth.getUser(), 'Checking the Supabase user')
     if (error) throw error
     return data.user
   },
 
-  async isAdmin(userId) {
-    const { data, error } = await getClient()
-      .from('admin_users')
-      .select('user_id')
-      .eq('user_id', userId)
-      .maybeSingle()
+  async isAdmin() {
+    const { data, error } = await withTimeout(
+      getClient().rpc('is_cuber_admin'),
+      'Checking CUBER admin authorization',
+    )
     if (error) throw error
-    return Boolean(data)
+    return data === true
   },
 
   async listBuilds() {
-    const { data, error } = await getClient()
-      .from('builds')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { data, error } = await withTimeout(
+      getClient()
+        .from('builds')
+        .select('*')
+        .order('created_at', { ascending: false }),
+      'Loading CUBER builds',
+    )
     if (error) throw error
     return data
   },

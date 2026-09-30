@@ -1,6 +1,6 @@
 # CUBER
 
-CUBER is a React and Vite portfolio website for a custom PC workshop. The public Selected Builds section reads its content from Supabase, and `/admin` is a private build-management dashboard.
+CUBER is a React and Vite portfolio website for a custom PC workshop. The public Selected Builds section reads its content from Supabase, and `/admin` is an unlisted build-management dashboard.
 
 ## Supabase setup
 
@@ -8,20 +8,11 @@ CUBER is a React and Vite portfolio website for a custom PC workshop. The public
 2. Copy `.env.example` to `.env` and set:
    - `VITE_SUPABASE_URL` to the project URL.
    - `VITE_SUPABASE_ANON_KEY` to the project publishable/anon key.
-3. In the Supabase SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql). This creates the bilingual `builds` table, an admin-user allowlist, row-level security policies, and the public-read/private-write `build-images` Storage bucket. It also adds `builds` to the Supabase Realtime publication so an already-open public page refreshes when builds are added, edited, or deleted.
-4. In Supabase Authentication, create an admin user with email and password. Public sign-up is not provided by this website.
-5. In the SQL Editor, allowlist the administrator using their Auth user UUID:
+3. In Supabase Authentication settings, disable **Allow new users to sign up**. Create or retain only your own Auth account using the Supabase dashboard; this website has no public registration flow.
+4. In the Supabase SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql). For an existing project, apply [`supabase/migrations/20260929_lock_admin_to_owner_email.sql`](./supabase/migrations/20260929_lock_admin_to_owner_email.sql) to replace the generic allowlist with the owner-only authorization check. The schema creates the bilingual `builds` table, row-level security policies, and the public-read/private-write `build-images` Storage bucket. It also adds `builds` to the Supabase Realtime publication so an already-open public page refreshes when builds are added, edited, or deleted.
+5. Restart Vite after changing `.env`, then open the unlinked `/admin` route and sign in with the authorized Auth account.
 
-   ```sql
-   insert into public.admin_users (user_id)
-   select id from auth.users where email = 'admin@example.com';
-   ```
-
-   Only trusted project administrators should run this SQL. To remove dashboard access, delete the user's row from `public.admin_users`.
-
-6. Restart Vite after changing `.env`, then open `/admin` and sign in with that account.
-
-The browser uses only the project URL and browser-safe anon/publishable key. It never needs the Supabase service-role key. Authentication is handled by Supabase Auth; the admin allowlist, database policies, and Storage policies enforce access on the Supabase side as well as in the interface.
+The browser uses only the project URL and browser-safe anon/publishable key. It never needs the Supabase service-role key. Authentication is handled by Supabase Auth; a database-side function authorizes only the configured account, and the database and Storage row-level security policies enforce that check on every protected write.
 
 Build names, descriptions, categories, and additional specifications have Turkish and English fields. Hardware fields (CPU, GPU, RAM, and storage) are shared between languages. Uploaded image paths are stored in the build row; image files live in the `build-images` bucket.
 
