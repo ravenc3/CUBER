@@ -123,7 +123,7 @@ const translations = {
       titleSecond: 'Birlikte Kuralım',
       description: 'Yeni bilgisayarınızdan beklentilerinizi anlatın. Gerisini birlikte planlayalım.',
       button: 'Projeyi konuşalım',
-      email: 'hello@cuber.work',
+      email: 'cuberbuilds@gmail.com',
     },
     footer: {
       tagline: 'Bağımsız tasarım. Özenle toplanan sistemler.',
@@ -256,7 +256,7 @@ const translations = {
       titleSecond: 'Build',
       description: 'Tell us what you need from your next PC. We’ll take it from there.',
       button: 'Start a conversation',
-      email: 'hello@cuber.work',
+      email: 'cuberbuilds@gmail.com',
     },
     footer: {
       tagline: 'Independent by design. Built to perform.',
