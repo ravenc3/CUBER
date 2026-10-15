@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 function toForm(build) {
   return {
-    id: build?.id || '',
+    id: build?.id || crypto.randomUUID(),
     name_tr: build?.name_tr || '',
     name_en: build?.name_en || '',
     description_tr: build?.description_tr || '',
@@ -43,7 +43,7 @@ function BuildEditor({ build, saving, error, onSave, onCancel, imageUrl }) {
     const selectedFiles = Array.from(event.target.files || []).map((file) => {
       const preview = URL.createObjectURL(file)
       objectUrls.current.add(preview)
-      return { file, preview }
+      return { id: crypto.randomUUID(), file, preview }
     })
     setFiles((current) => [...current, ...selectedFiles])
     event.target.value = ''
@@ -79,7 +79,7 @@ function BuildEditor({ build, saving, error, onSave, onCancel, imageUrl }) {
         .split('\n')
         .map((spec) => spec.trim())
         .filter(Boolean),
-    }, files.map(({ file }) => file))
+    }, files.map(({ id, file }) => ({ id, file })))
   }
 
   return (
@@ -90,7 +90,7 @@ function BuildEditor({ build, saving, error, onSave, onCancel, imageUrl }) {
           <h2>{build ? 'Edit build' : 'Add build'}</h2>
         </div>
         <button className="admin-button admin-button-secondary" type="button" onClick={onCancel}>
-          Cancel
+          {saving ? 'Cancel save' : 'Cancel'}
         </button>
       </div>
 
@@ -220,8 +220,8 @@ function BuildEditor({ build, saving, error, onSave, onCancel, imageUrl }) {
         <button className="admin-button admin-button-primary" type="submit" disabled={saving}>
           {saving ? 'Saving…' : 'Save build'}
         </button>
-        <button className="admin-button admin-button-secondary" type="button" onClick={onCancel} disabled={saving}>
-          Cancel
+        <button className="admin-button admin-button-secondary" type="button" onClick={onCancel}>
+          {saving ? 'Cancel save' : 'Cancel'}
         </button>
       </div>
     </form>

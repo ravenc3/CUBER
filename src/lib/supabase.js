@@ -6,8 +6,31 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
 const clientKey = '__cuberSupabaseClient'
+const storageRequestSignals = new Map()
+
+function getStorageRequestSignal(input, init) {
+  const requestUrl = new URL(input instanceof Request ? input.url : input, supabaseUrl)
+  const path = requestUrl.pathname.match(/\/storage\/v1\/object\/build-images\/([^/]+)/)?.[1]
+  if (path) return storageRequestSignals.get(decodeURIComponent(path))
+
+  if (requestUrl.pathname.endsWith('/object/build-images') && init?.method === 'DELETE') {
+    const prefixes = JSON.parse(init.body || '{}').prefixes
+    const firstPath = prefixes?.[0]
+    if (typeof firstPath === 'string') {
+      return storageRequestSignals.get(firstPath.split('/')[0])
+    }
+  }
+  return undefined
+}
+
 const client = isSupabaseConfigured
   ? (globalThis[clientKey] ??= createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        fetch: (input, init) => {
+          const signal = getStorageRequestSignal(input, init)
+          return fetch(input, signal ? { ...init, signal } : init)
+        },
+      },
       auth: {
         autoRefreshToken: true,
         persistSession: true,
@@ -33,6 +56,18 @@ function getClient() {
     throw new Error('Supabase is not configured. Add the required VITE_SUPABASE variables to .env.')
   }
   return client
+}
+
+async function withStorageRequestSignal(buildId, signal, operation) {
+  if (!signal) return operation()
+  storageRequestSignals.set(buildId, signal)
+  try {
+    return await operation()
+  } finally {
+    if (storageRequestSignals.get(buildId) === signal) {
+      storageRequestSignals.delete(buildId)
+    }
+  }
 }
 
 export const supabase = {
@@ -98,22 +133,24 @@ export const supabase = {
     }
   },
 
-  async createBuild(build) {
+  async createBuild(build, signal) {
     const { data, error } = await getClient()
       .from('builds')
-      .insert(build)
+      .upsert(build, { onConflict: 'id' })
       .select()
+      .abortSignal(signal)
       .single()
     if (error) throw error
     return data
   },
 
-  async updateBuild(build) {
+  async updateBuild(build, signal) {
     const { data, error } = await getClient()
       .from('builds')
       .update(build)
       .eq('id', build.id)
       .select()
+      .abortSignal(signal)
       .single()
     if (error) throw error
     return data
@@ -130,22 +167,26 @@ export const supabase = {
     if (!data) throw new Error('The build was not deleted.')
   },
 
-  async uploadBuildImage(path, file) {
-    const { data, error } = await getClient()
+  async uploadBuildImage(path, file, signal) {
+    const buildId = path.split('/')[0]
+    const { data, error } = await withStorageRequestSignal(buildId, signal, () => getClient()
       .storage
       .from('build-images')
       .upload(path, file, {
         cacheControl: '3600',
         contentType: file.type,
-        upsert: false,
-      })
+        upsert: true,
+      }))
     if (error) throw error
     return data
   },
 
-  async deleteBuildImages(paths) {
+  async deleteBuildImages(paths, signal) {
     if (!paths.length) return
-    const { error } = await getClient().storage.from('build-images').remove(paths)
+    const buildId = paths[0].split('/')[0]
+    const { error } = await withStorageRequestSignal(buildId, signal, () =>
+      getClient().storage.from('build-images').remove(paths),
+    )
     if (error) throw error
   },
 

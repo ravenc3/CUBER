@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import BuildEditor from './BuildEditor.jsx'
 import { isSupabaseConfigured, supabase } from '../lib/supabase.js'
 import './Admin.css'
@@ -12,6 +12,9 @@ function AdminApp() {
   const [editorOpen, setEditorOpen] = useState(false)
   const [error, setError] = useState('')
   const [editorError, setEditorError] = useState('')
+  const saveInProgress = useRef(false)
+  const saveController = useRef(null)
+  const persistedDrafts = useRef(new Set())
 
   const loadBuilds = useCallback(async () => {
     try {
@@ -103,66 +106,108 @@ function AdminApp() {
   }
 
   async function saveBuild(form, files) {
+    if (saveInProgress.current) return
+    saveInProgress.current = true
+    const controller = new AbortController()
+    saveController.current = controller
     setSaving(true)
     setEditorError('')
     const uploadedPaths = []
     const removedPaths = editorBuild
       ? editorBuild.images.filter((path) => !form.images.includes(path))
       : []
-    const buildId = form.id || crypto.randomUUID()
+    const buildId = form.id
+    const isNewBuild = !editorBuild
+    let uploading = true
 
     try {
-      for (const file of files) {
+      for (const { file } of files) {
         if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif'].includes(file.type)) {
           throw new Error(`${file.name} is not a supported image format.`)
         }
         if (file.size > 10 * 1024 * 1024) {
           throw new Error(`${file.name} exceeds the 10 MB image limit.`)
         }
-        const path = `${buildId}/${crypto.randomUUID()}-${file.name.replace(/[^\w.-]/g, '-')}`
-        await supabase.uploadBuildImage(path, file)
-        uploadedPaths.push(path)
       }
 
       const { id, ...fields } = form
-      const buildRecord = {
+      const baseRecord = {
         ...fields,
-        id: buildId,
+        id,
+        images: form.images,
+        updated_at: new Date().toISOString(),
+      }
+      let saved
+
+      if (isNewBuild && !persistedDrafts.current.has(buildId)) {
+        saved = await supabase.createBuild(baseRecord, controller.signal)
+        persistedDrafts.current.add(buildId)
+        setBuilds((current) => [
+          saved,
+          ...current.filter((build) => build.id !== saved.id),
+        ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+      }
+
+      for (const { id: fileId, file } of files) {
+        const path = `${buildId}/${fileId}-${file.name.replace(/[^\w.-]/g, '-')}`
+        uploadedPaths.push(path)
+        await supabase.uploadBuildImage(path, file, controller.signal)
+      }
+      uploading = false
+
+      const buildRecord = {
+        ...baseRecord,
         images: [...form.images, ...uploadedPaths],
         updated_at: new Date().toISOString(),
       }
-      const saved = id
-        ? await supabase.updateBuild(buildRecord)
-        : await supabase.createBuild(buildRecord)
+      if (isNewBuild) {
+        saved = files.length || !saved
+          ? await supabase.updateBuild(buildRecord, controller.signal)
+          : saved
+      } else {
+        saved = await supabase.updateBuild(buildRecord, controller.signal)
+      }
 
       if (removedPaths.length) {
-        try {
-          await supabase.deleteBuildImages(removedPaths)
-        } catch (cleanupError) {
-          setError(`Build saved, but removed images could not be deleted: ${cleanupError.message}`)
-        }
+        void supabase.deleteBuildImages(removedPaths)
+          .catch((cleanupError) => {
+            setError(`Build saved, but removed images could not be deleted: ${cleanupError.message}`)
+          })
       }
 
       setBuilds((current) => [
         saved,
         ...current.filter((build) => build.id !== saved.id),
       ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+      persistedDrafts.current.delete(buildId)
       setEditorOpen(false)
       setEditorBuild(null)
     } catch (saveError) {
-      if (uploadedPaths.length) {
+      const message = controller.signal.aborted
+        ? 'Save cancelled. Your build details are still here; you can retry.'
+        : saveError.message
+      if (uploading && uploadedPaths.length) {
+        const cleanupController = controller.signal.aborted
+          ? new AbortController()
+          : controller
+        if (cleanupController !== controller) saveController.current = cleanupController
         try {
-          await supabase.deleteBuildImages(uploadedPaths)
+          await supabase.deleteBuildImages(uploadedPaths, cleanupController.signal)
         } catch (cleanupError) {
-          setEditorError(`${saveError.message} Uploaded images could not be cleaned up: ${cleanupError.message}`)
-          setSaving(false)
+          setEditorError(`${message} Uploaded images could not be cleaned up: ${cleanupError.message}`)
           return
         }
       }
-      setEditorError(saveError.message)
+      setEditorError(message)
     } finally {
+      if (saveController.current === controller) saveController.current = null
+      saveInProgress.current = false
       setSaving(false)
     }
+  }
+
+  function cancelSave() {
+    saveController.current?.abort()
   }
 
   async function deleteBuild(build) {
@@ -243,6 +288,10 @@ function AdminApp() {
             error={editorError}
             onSave={saveBuild}
             onCancel={() => {
+              if (saving) {
+                cancelSave()
+                return
+              }
               setEditorOpen(false)
               setEditorBuild(null)
               setEditorError('')
