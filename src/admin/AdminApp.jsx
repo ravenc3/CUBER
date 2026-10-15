@@ -130,10 +130,19 @@ function AdminApp() {
         }
       }
 
-      const { id, ...fields } = form
+      const {
+        id,
+        name_ar,
+        description_ar,
+        ...fields
+      } = form
       const baseRecord = {
         ...fields,
         id,
+        ...(name_ar || editorBuild?.name_ar ? { name_ar: name_ar || null } : {}),
+        ...(description_ar || editorBuild?.description_ar
+          ? { description_ar: description_ar || null }
+          : {}),
         images: form.images,
         updated_at: new Date().toISOString(),
       }

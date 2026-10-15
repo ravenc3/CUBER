@@ -8,7 +8,7 @@ function Hero({ copy }) {
       <div className="hero-content">
         <p className="hero-kicker"><span /> {copy.kicker}</p>
         <BrandLogo className="brand-logo brand-logo-hero" />
-        <h1 id="hero-title">Build your<br /><span>legacy.</span></h1>
+        <h1 id="hero-title">{copy.titleFirst}<br /><span>{copy.titleSecond}</span></h1>
         <div className="hero-bottom">
           <p>{copy.description}</p>
           <a className="text-link hero-link" href="#builds">
@@ -18,7 +18,7 @@ function Hero({ copy }) {
       </div>
       <div className="hero-caption" aria-hidden="true">
         <span>{copy.caption}</span>
-        <span>{copy.imagePosition}</span>
+        <span dir="ltr">{copy.imagePosition}</span>
       </div>
     </section>
   )

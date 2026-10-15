@@ -32,7 +32,8 @@ function BuildCard({
 
     function handleKeyDown(event) {
       if (event.key === 'Escape') setActiveImage(null)
-      if (event.key === 'Tab' && !document.querySelector('.build-lightbox')) {
+      const isRtl = document.documentElement.dir === 'rtl'
+      if (event.key === 'Tab') {
         const buttons = dialogRef.current?.querySelectorAll('button:not(:disabled)')
         if (!buttons?.length) return
 
@@ -46,10 +47,10 @@ function BuildCard({
           firstButton.focus()
         }
       }
-      if (images.length > 1 && event.key === 'ArrowRight') {
+      if (images.length > 1 && event.key === (isRtl ? 'ArrowLeft' : 'ArrowRight')) {
         setActiveImage((current) => (current + 1) % images.length)
       }
-      if (images.length > 1 && event.key === 'ArrowLeft') {
+      if (images.length > 1 && event.key === (isRtl ? 'ArrowRight' : 'ArrowLeft')) {
         setActiveImage((current) => (current - 1 + images.length) % images.length)
       }
     }
@@ -74,7 +75,7 @@ function BuildCard({
       if (event.key === 'Escape' && !document.querySelector('.build-lightbox')) {
         setDetailsOpen(false)
       }
-      if (event.key === 'Tab') {
+      if (event.key === 'Tab' && !document.querySelector('.build-lightbox')) {
         const controls = document.querySelector('.build-details-dialog')
           ?.querySelectorAll('button:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])')
         if (!controls?.length) return
@@ -170,18 +171,23 @@ function BuildCard({
           </button>
         ) : (
           <div className="build-image-link">
-            <span className="build-image-placeholder">{name}</span>
+            <span className="build-image-placeholder" dir="auto">{name}</span>
             <span className="build-index">0{index + 1}</span>
           </div>
         )}
         <div className="build-card-copy">
-          <p className="build-category">{build.category}</p>
-          <h3>{name}</h3>
-          <p className="build-description">{build.description}</p>
+          <p className="build-category" dir="auto">{build.category}</p>
+          <h3 dir="auto">{name}</h3>
+          <p className="build-description" dir="auto">{build.description}</p>
         </div>
         {build.specs.length > 0 && (
           <ul className="build-specs" aria-label={specsLabelTemplate.replace('{name}', name)}>
-            {build.specs.slice(0, 4).map((spec) => <li key={spec}>{spec}</li>)}
+            {build.specs.slice(0, 4).map((spec, specIndex) => (
+              <li key={`${spec.label}-${spec.value}-${specIndex}`}>
+                {spec.label && <span className="build-spec-label">{spec.label}: </span>}
+                <bdi dir={spec.label ? 'ltr' : 'auto'}>{spec.value}</bdi>
+              </li>
+            ))}
           </ul>
         )}
         {build.specs.length > 4 && (
@@ -190,7 +196,12 @@ function BuildCard({
               {moreSpecsTemplate.replace('{count}', String(build.specs.length - 4))}
             </summary>
             <ul className="build-specs" aria-label={specsLabelTemplate.replace('{name}', name)}>
-              {build.specs.slice(4).map((spec) => <li key={spec}>{spec}</li>)}
+              {build.specs.slice(4).map((spec, specIndex) => (
+                <li key={`${spec.label}-${spec.value}-${specIndex}`}>
+                  {spec.label && <span className="build-spec-label">{spec.label}: </span>}
+                  <bdi dir={spec.label ? 'ltr' : 'auto'}>{spec.value}</bdi>
+                </li>
+              ))}
             </ul>
           </details>
         )}
@@ -218,14 +229,19 @@ function BuildCard({
             >
               ×
             </button>
-            <p className="build-category">{build.category}</p>
-            <h2 id={`build-details-title-${build.id}`}>{name}</h2>
-            <p className="build-details-description">{build.description}</p>
+            <p className="build-category" dir="auto">{build.category}</p>
+            <h2 id={`build-details-title-${build.id}`} dir="auto">{name}</h2>
+            <p className="build-details-description" dir="auto">{build.description}</p>
             <div className="build-details-section">
               <h3>{specsLabelTemplate.replace('{name}', name)}</h3>
               {build.specs.length > 0 ? (
                 <ul className="build-specs">
-                  {build.specs.map((spec) => <li key={spec}>{spec}</li>)}
+                  {build.specs.map((spec, specIndex) => (
+                    <li key={`${spec.label}-${spec.value}-${specIndex}`}>
+                      {spec.label && <span className="build-spec-label">{spec.label}: </span>}
+                      <bdi dir={spec.label ? 'ltr' : 'auto'}>{spec.value}</bdi>
+                    </li>
+                  ))}
                 </ul>
               ) : (
                 <p className="build-details-empty">—</p>

@@ -37,7 +37,7 @@ function Header({ language, onLanguageChange, copy }) {
           {copy.startBuild} <span aria-hidden="true">↗</span>
         </a>
         <div className="language-switcher" role="group" aria-label={copy.language}>
-          {['tr', 'en'].map((option) => (
+          {['tr', 'en', 'ar'].map((option) => (
             <button
               className={language === option ? 'is-active' : ''}
               key={option}

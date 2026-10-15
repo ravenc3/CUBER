@@ -23,6 +23,7 @@ function PublicSite() {
 
   useEffect(() => {
     document.documentElement.lang = language
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr'
     document.title = copy.meta.title
     document
       .querySelector('meta[name="description"]')
@@ -35,7 +36,7 @@ function PublicSite() {
       ?.setAttribute('content', copy.meta.description)
     document
       .querySelector('meta[property="og:locale"]')
-      ?.setAttribute('content', language === 'tr' ? 'tr_TR' : 'en_US')
+      ?.setAttribute('content', { tr: 'tr_TR', en: 'en_US', ar: 'ar_AR' }[language])
     document
       .querySelector('meta[name="twitter:title"]')
       ?.setAttribute('content', copy.meta.title)

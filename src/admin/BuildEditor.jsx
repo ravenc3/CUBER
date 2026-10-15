@@ -5,8 +5,10 @@ function toForm(build) {
     id: build?.id || crypto.randomUUID(),
     name_tr: build?.name_tr || '',
     name_en: build?.name_en || '',
+    name_ar: build?.name_ar || '',
     description_tr: build?.description_tr || '',
     description_en: build?.description_en || '',
+    description_ar: build?.description_ar || '',
     category_tr: build?.category_tr || '',
     category_en: build?.category_en || '',
     cpu: build?.cpu || '',
@@ -107,6 +109,10 @@ function BuildEditor({ build, saving, error, onSave, onCancel, imageUrl }) {
             Build name (English)
             <input name="name_en" value={form.name_en} onChange={updateField} required />
           </label>
+          <label>
+            Build name (Arabic, optional)
+            <input name="name_ar" value={form.name_ar} onChange={updateField} dir="rtl" />
+          </label>
           <label className="admin-field-wide">
             Description (Turkish)
             <textarea name="description_tr" value={form.description_tr} onChange={updateField} rows="3" required />
@@ -114,6 +120,10 @@ function BuildEditor({ build, saving, error, onSave, onCancel, imageUrl }) {
           <label className="admin-field-wide">
             Description (English)
             <textarea name="description_en" value={form.description_en} onChange={updateField} rows="3" required />
+          </label>
+          <label className="admin-field-wide">
+            Description (Arabic, optional)
+            <textarea name="description_ar" value={form.description_ar} onChange={updateField} rows="3" dir="rtl" />
           </label>
           <label>
             Category / tag (Turkish)

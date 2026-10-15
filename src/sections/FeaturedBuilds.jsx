@@ -54,12 +54,16 @@ function FeaturedBuilds({ copy, language }) {
   function updateActiveBuild() {
     const carousel = carouselRef.current
     if (!carousel) return
-    const carouselLeft = carousel.getBoundingClientRect().left
+    const bounds = carousel.getBoundingClientRect()
+    const isRtl = getComputedStyle(carousel).direction === 'rtl'
     let closestIndex = 0
     let closestDistance = Infinity
 
     Array.from(carousel.children).forEach((slide, index) => {
-      const distance = Math.abs(slide.getBoundingClientRect().left - carouselLeft)
+      const slideBounds = slide.getBoundingClientRect()
+      const distance = isRtl
+        ? Math.abs(slideBounds.right - bounds.right)
+        : Math.abs(slideBounds.left - bounds.left)
       if (distance < closestDistance) {
         closestDistance = distance
         closestIndex = index

@@ -26,6 +26,11 @@
   font-size: 16px;
 }
 
+html[lang='ar'] {
+  --font-body: Tahoma, Arial, sans-serif;
+  --font-display: Tahoma, Arial, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }

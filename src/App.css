@@ -42,7 +42,8 @@ main,
 
 .brand-logo-hero {
   width: clamp(250px, 38vw, 470px);
-  margin: 30px 0 26px -4px;
+  margin-block: 30px 26px;
+  margin-inline-start: -4px;
 }
 
 .brand-logo-footer {
@@ -70,7 +71,7 @@ main,
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  margin-left: 4px;
+  margin-inline-start: 4px;
   padding: 3px;
   border: 1px solid rgba(240, 239, 236, 0.2);
 }
@@ -259,9 +260,8 @@ main,
 
 .hero-caption {
   position: absolute;
-  right: var(--page-gutter);
+  inset-inline: var(--page-gutter);
   bottom: 27px;
-  left: var(--page-gutter);
   display: flex;
   justify-content: space-between;
   color: rgba(240, 239, 236, 0.82);
@@ -455,7 +455,7 @@ main,
 .build-details-close {
   position: absolute;
   top: 18px;
-  right: 18px;
+  inset-inline-end: 18px;
   display: grid;
   width: 42px;
   height: 42px;
@@ -541,7 +541,7 @@ main,
   border: 0;
   background: #22221f;
   color: inherit;
-  text-align: left;
+  text-align: start;
   cursor: zoom-in;
 }
 
@@ -598,12 +598,12 @@ main,
 }
 
 .build-index {
-  left: 18px;
+  inset-inline-start: 18px;
   color: rgba(240, 239, 236, 0.83);
 }
 
 .build-arrow {
-  right: 18px;
+  inset-inline-end: 18px;
   font-size: 16px;
   transition: color 180ms ease, background 180ms ease;
 }
@@ -672,7 +672,7 @@ main,
 
 .build-lightbox-close {
   top: 0;
-  right: 0;
+  inset-inline-end: 0;
 }
 
 .build-lightbox-navigation {
@@ -681,11 +681,11 @@ main,
 }
 
 .build-lightbox-previous {
-  left: 0;
+  inset-inline-start: 0;
 }
 
 .build-lightbox-next {
-  right: 0;
+  inset-inline-end: 0;
 }
 
 .build-lightbox-count {
@@ -748,6 +748,10 @@ main,
   font-size: 11px;
   letter-spacing: 0.25px;
   line-height: 1.5;
+}
+
+.build-spec-label {
+  font-weight: var(--weight-semibold);
 }
 
 .build-additional-specs {
@@ -1061,7 +1065,7 @@ main,
   display: inline-block;
   width: 16px;
   height: 16px;
-  margin-right: 7px;
+  margin-inline-end: 7px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1082,7 +1086,7 @@ main,
 
 .contact-mark {
   position: absolute;
-  right: 25%;
+  inset-inline-end: 25%;
   bottom: -0.46em;
   color: rgba(240, 239, 236, 0.035);
   font-family: var(--font-display);
@@ -1131,7 +1135,7 @@ main,
 
 .footer-copyright {
   color: var(--color-muted);
-  text-align: right;
+  text-align: end;
 }
 
 @keyframes hero-reveal {
@@ -1307,7 +1311,7 @@ main,
   .footer-copyright {
     grid-column: 2;
     grid-row: 2;
-    text-align: right;
+    text-align: end;
   }
 }
 
@@ -1404,7 +1408,8 @@ main,
 
   .brand-logo-hero {
     width: clamp(245px, 75vw, 370px);
-    margin: 25px 0 23px -3px;
+    margin-block: 25px 23px;
+    margin-inline-start: -3px;
   }
 
   .hero-content h1 {
@@ -1488,7 +1493,7 @@ main,
 
   .build-details-close {
     top: 12px;
-    right: 12px;
+    inset-inline-end: 12px;
   }
 
   .build-image-link {
@@ -1657,5 +1662,76 @@ main,
     grid-column: 1 / -1;
     grid-row: 3;
     text-align: left;
+  }
+}
+
+[dir='rtl'] .hero-image {
+  background-image:
+    linear-gradient(270deg, rgba(12, 12, 11, 0.93) 0%, rgba(12, 12, 11, 0.72) 38%, rgba(12, 12, 11, 0.12) 100%),
+    linear-gradient(0deg, rgba(12, 12, 11, 0.58), transparent 38%),
+    url('https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=2400&q=90');
+}
+
+[dir='rtl'] .text-link span,
+[dir='rtl'] .nav-contact span,
+[dir='rtl'] .contact-button span,
+[dir='rtl'] .service-mark,
+[dir='rtl'] .back-to-top span,
+[dir='rtl'] .build-arrow,
+[dir='rtl'] .build-carousel-arrow {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .service-row:hover .service-mark {
+  transform: translate(-3px, -3px) scaleX(-1);
+}
+
+[dir='rtl'] .build-lightbox-navigation {
+  transform: translateY(-50%) scaleX(-1);
+}
+
+[dir='rtl'] .section-count,
+[dir='rtl'] .build-index,
+[dir='rtl'] .about-coordinate,
+[dir='rtl'] .build-lightbox-count {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+[dir='rtl'] .contact-email {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
+[dir='rtl'] .footer-copyright {
+  text-align: end;
+}
+
+[dir='rtl'] h1,
+[dir='rtl'] h2,
+[dir='rtl'] h3,
+[dir='rtl'] .hero-kicker,
+[dir='rtl'] .eyebrow,
+[dir='rtl'] .section-count,
+[dir='rtl'] .build-category,
+[dir='rtl'] .about-coordinate,
+[dir='rtl'] .service-number,
+[dir='rtl'] .process-number,
+[dir='rtl'] .build-specs li {
+  letter-spacing: normal;
+}
+
+@media (max-width: 640px) {
+  [dir='rtl'] .hero-image {
+    background-image:
+      linear-gradient(270deg, rgba(12, 12, 11, 0.75), rgba(12, 12, 11, 0.2)),
+      linear-gradient(0deg, rgba(12, 12, 11, 0.92) 0%, rgba(12, 12, 11, 0.38) 65%, rgba(12, 12, 11, 0.12)),
+      url('https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1400&q=85');
+  }
+
+  [dir='rtl'] .contact-mark {
+    right: auto;
+    inset-inline-end: -8%;
   }
 }

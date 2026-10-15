@@ -20,6 +20,8 @@ const translations = {
     hero: {
       imageAlt: 'Özel üretim, üst segment bir bilgisayar sisteminin atmosferik görünümü',
       kicker: 'Bağımsız PC atölyesi',
+      titleFirst: 'Build your',
+      titleSecond: 'legacy.',
       description: 'İhtiyacınıza göre tasarlanan, özenle toplanan bilgisayarlar. Çalışma ve oyun alışkanlıklarınız için.',
       explore: 'Sistemleri keşfedin',
       caption: 'Atölyede tasarlandı',
@@ -162,6 +164,8 @@ const translations = {
     hero: {
       imageAlt: 'Atmospheric view of a premium custom PC build',
       kicker: 'Independent PC workshop',
+      titleFirst: 'Build your',
+      titleSecond: 'legacy.',
       description: 'Custom-built PCs, made with intent. Designed around the way you work and play.',
       explore: 'Explore our builds',
       caption: 'Engineered in the workshop',
@@ -281,6 +285,150 @@ const translations = {
       backToTop: 'Back to top',
       copyright: '© {year} CUBER Workshop',
       home: 'CUBER home',
+    },
+  },
+  ar: {
+    meta: {
+      title: 'CUBER — اصنع إرثك.',
+      description:
+        'CUBER ورشة مستقلة لتصميم وتجميع أجهزة الكمبيوتر حسب الطلب، بعناية في التصميم واختيار المكونات لتناسب احتياجاتك.',
+    },
+    navigation: {
+      ariaLabel: 'التنقل الرئيسي',
+      menuOpen: 'فتح قائمة التنقل',
+      menuClose: 'إغلاق قائمة التنقل',
+      home: 'الصفحة الرئيسية لـ CUBER',
+      selectedBuilds: 'أجهزة مختارة',
+      workshop: 'داخل ورشة CUBER',
+      services: 'ما نقدمه',
+      standard: 'معيار CUBER',
+      startBuild: 'لنصمم جهازك',
+      language: 'اختيار اللغة',
+    },
+    hero: {
+      imageAlt: 'مشهد أنيق لجهاز كمبيوتر فاخر مصمم حسب الطلب',
+      kicker: 'ورشة مستقلة لأجهزة الكمبيوتر',
+      titleFirst: 'اصنع',
+      titleSecond: 'إرثك.',
+      description: 'أجهزة كمبيوتر تُصمم وتُجمع بعناية لتناسب طريقة عملك ولعبك.',
+      explore: 'اكتشف أجهزتنا',
+      caption: 'صُمم داخل الورشة',
+      imagePosition: '01 / 04',
+    },
+    selectedBuilds: {
+      eyebrow: 'أعمال مختارة',
+      title: 'تصميم مدروس.\nوتجميعة تناسبك.',
+      description:
+        'تبدأ كل تجميعة من CUBER بالاستماع إليك. إليك بعض الأجهزة التي أنجزناها في ورشتنا.',
+      count: '01 — {count}',
+      enquire: 'استفسر عن {name}',
+      specsLabel: 'مواصفات {name}',
+      moreSpecs: '+ {count} مواصفات إضافية',
+      details: {
+        title: 'تفاصيل الجهاز',
+        gallery: 'معرض الصور',
+        close: 'إغلاق التفاصيل',
+      },
+      paginationLabel: 'اختيار الجهاز',
+      showBuild: 'عرض الجهاز رقم {number}',
+      previous: 'الجهاز السابق',
+      next: 'الجهاز التالي',
+      lightbox: {
+        title: 'صورة {name}',
+        close: 'إغلاق الصورة',
+        previous: 'الصورة السابقة',
+        next: 'الصورة التالية',
+      },
+      specLabels: {
+        cpu: 'المعالج',
+        gpu: 'كرت الشاشة',
+        motherboard: 'اللوحة الأم',
+        ram: 'الذاكرة',
+        storage: 'التخزين',
+        cpuCooler: 'مبرد المعالج',
+        pcCase: 'الصندوق',
+        caseFans: 'مراوح الصندوق',
+        psu: 'مزود الطاقة',
+      },
+      loading: 'جارٍ تحميل الأجهزة…',
+      empty: 'ستظهر أجهزتنا المختارة هنا قريبًا.',
+      loadError: 'تعذر تحميل الأجهزة:',
+      configurationError: 'كتالوج الأجهزة غير متاح حاليًا.',
+    },
+    workshop: {
+      imageAlt: 'حرفي يعمل بعناية على طاولة مجهزة داخل الورشة',
+      imageLabel: 'ورشة CUBER / 51°30\'26.4"N',
+      eyebrow: 'صناعة يدوية لا إنتاج متكرر',
+      title: 'داخل ورشة CUBER',
+      description:
+        'نؤمن بأن جهاز الكمبيوتر الجيد يستحق العناية نفسها التي توليها لعملك عليه. نجمع كل جهاز ونضبطه ونختبره يدويًا في ورشتنا المستقلة.',
+      link: 'تعرّف على ورشتنا',
+    },
+    services: {
+      eyebrow: 'ما نقدمه',
+      title: 'مصمم لك.\nومنفذ بدقة.',
+      description: 'ورشة واحدة، نصيحة متخصصة، وحلول تتجاوز الخيارات الجاهزة.',
+      items: [
+        {
+          title: 'أجهزة مخصصة',
+          description: 'كمبيوتر متكامل مصمم وفق أولوياتك ومساحتك وميزانيتك.',
+        },
+        {
+          title: 'تخطيط التجميعة',
+          description: 'اختيار المكونات المناسبة وخطة واضحة قبل طلب أي قطعة.',
+        },
+        {
+          title: 'الترقية والعناية',
+          description: 'ترقيات مدروسة وصيانة ودعم متخصص لجهازك.',
+        },
+      ],
+    },
+    process: {
+      eyebrow: 'آلية العمل',
+      title: 'مراحل التجميع',
+      intro: 'خطوات واضحة وتعاونية، من الفكرة الأولى حتى التشغيل الأول.',
+      steps: [
+        {
+          title: 'نستمع إلى أولوياتك',
+          description: 'نتعرف إلى طبيعة عملك وما تلعبه وما تتوقعه من جهازك.',
+        },
+        {
+          title: 'نخطط الجهاز معًا',
+          description: 'قائمة مكونات مدروسة وخيارات واضحة بلا مفاجآت قبل البدء.',
+        },
+        {
+          title: 'نجمع الجهاز ونضبطه',
+          description: 'نجمع الكمبيوتر يدويًا ونرتب الكابلات ونضبط الأداء ونختبره.',
+        },
+        {
+          title: 'نسلمه جاهزًا للاستخدام',
+          description: 'نسلمك جهازك المكتمل ونبقى إلى جانبك مع تطور احتياجاتك.',
+        },
+      ],
+    },
+    about: {
+      eyebrow: 'أسلوب عملنا',
+      established: 'CUBER / منذ 2018',
+      titleFirst: 'معيار',
+      titleSecond: 'CUBER',
+      lead: 'CUBER ورشة مستقلة لأجهزة الكمبيوتر، لمن يقدّرون التفاصيل.',
+      description:
+        'نجمع بين التصميم المدروس والهندسة الموثوقة والخدمة الشخصية التي يصعب العثور عليها في كتالوجات المنتجات. بلا قوالب جاهزة ولا مبالغة؛ جهاز مصمم لك على أيدي أشخاص يهتمون بكل تفاصيله.',
+      link: 'تعرّف إلينا',
+    },
+    contact: {
+      eyebrow: 'هل لديك فكرة لجهازك؟',
+      titleFirst: 'لنصمم',
+      titleSecond: 'جهازك معًا',
+      description: 'أخبرنا بما تحتاجه من جهازك القادم، وسنتولى التخطيط معك.',
+      button: 'ابدأ الحديث معنا',
+      email: 'cuberbuilds@gmail.com',
+    },
+    footer: {
+      tagline: 'تصميم مستقل. وأجهزة مجمعة لتؤدي بكفاءة.',
+      backToTop: 'العودة إلى الأعلى',
+      copyright: '© {year} ورشة CUBER',
+      home: 'الصفحة الرئيسية لـ CUBER',
     },
   },
 }
