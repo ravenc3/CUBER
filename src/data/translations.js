@@ -34,6 +34,15 @@ const translations = {
       enquire: '{name} hakkında bilgi alın',
       specsLabel: '{name} teknik özellikleri',
       moreSpecs: '+ {count} teknik özellik daha',
+      details: {
+        title: 'Sistem detayları',
+        gallery: 'Görseller',
+        close: 'Detayları kapat',
+      },
+      paginationLabel: 'Sistem seçimi',
+      showBuild: '{number}. sistemi göster',
+      previous: 'Önceki sistem',
+      next: 'Sonraki sistem',
       lightbox: {
         title: '{name} görseli',
         close: 'Görseli kapat',
@@ -167,6 +176,15 @@ const translations = {
       enquire: 'Enquire about {name}',
       specsLabel: '{name} highlights',
       moreSpecs: '+ {count} more specifications',
+      details: {
+        title: 'Build details',
+        gallery: 'Gallery',
+        close: 'Close details',
+      },
+      paginationLabel: 'Build selection',
+      showBuild: 'Show build {number}',
+      previous: 'Previous build',
+      next: 'Next build',
       lightbox: {
         title: '{name} image',
         close: 'Close image',

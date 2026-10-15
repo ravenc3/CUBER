@@ -7,14 +7,19 @@ function BuildCard({
   specsLabelTemplate,
   moreSpecsTemplate,
   lightboxCopy,
+  detailsCopy,
   index,
 }) {
   const name = build.name
   const images = build.images?.length ? build.images : build.image ? [build.image] : []
   const [activeImage, setActiveImage] = useState(null)
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const closeButtonRef = useRef(null)
+  const detailsCloseButtonRef = useRef(null)
   const dialogRef = useRef(null)
   const imageButtonRef = useRef(null)
+  const pointerStart = useRef(null)
+  const suppressClick = useRef(false)
   const isLightboxOpen = activeImage !== null
 
   useEffect(() => {
@@ -27,7 +32,7 @@ function BuildCard({
 
     function handleKeyDown(event) {
       if (event.key === 'Escape') setActiveImage(null)
-      if (event.key === 'Tab') {
+      if (event.key === 'Tab' && !document.querySelector('.build-lightbox')) {
         const buttons = dialogRef.current?.querySelectorAll('button:not(:disabled)')
         if (!buttons?.length) return
 
@@ -57,6 +62,43 @@ function BuildCard({
     }
   }, [isLightboxOpen, images.length])
 
+  useEffect(() => {
+    if (!detailsOpen) return undefined
+
+    const imageButton = imageButtonRef.current
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    detailsCloseButtonRef.current?.focus()
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape' && !document.querySelector('.build-lightbox')) {
+        setDetailsOpen(false)
+      }
+      if (event.key === 'Tab') {
+        const controls = document.querySelector('.build-details-dialog')
+          ?.querySelectorAll('button:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])')
+        if (!controls?.length) return
+
+        const firstControl = controls[0]
+        const lastControl = controls[controls.length - 1]
+        if (event.shiftKey && document.activeElement === firstControl) {
+          event.preventDefault()
+          lastControl.focus()
+        } else if (!event.shiftKey && document.activeElement === lastControl) {
+          event.preventDefault()
+          firstControl.focus()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+      imageButton?.focus()
+    }
+  }, [detailsOpen])
+
   function showPreviousImage() {
     setActiveImage((current) => (current - 1 + images.length) % images.length)
   }
@@ -65,16 +107,62 @@ function BuildCard({
     setActiveImage((current) => (current + 1) % images.length)
   }
 
+  function handleCardClick(event) {
+    if (suppressClick.current) {
+      suppressClick.current = false
+      return
+    }
+    if (event.target.closest('button, a, summary, details')) return
+    setDetailsOpen(true)
+  }
+
+  function handleCardPointerDown(event) {
+    pointerStart.current = { x: event.clientX, y: event.clientY }
+  }
+
+  function handleCardPointerUp(event) {
+    if (!pointerStart.current) return
+    const moved = Math.hypot(
+      event.clientX - pointerStart.current.x,
+      event.clientY - pointerStart.current.y,
+    ) > 10
+    suppressClick.current = moved
+    pointerStart.current = null
+    if (moved) {
+      window.setTimeout(() => {
+        suppressClick.current = false
+      }, 0)
+    }
+  }
+
   return (
     <>
-      <article className="build-card">
+      <article
+        className="build-card"
+        tabIndex={0}
+        aria-label={enquireTemplate.replace('{name}', name)}
+        aria-haspopup="dialog"
+        onClick={handleCardClick}
+        onKeyDown={(event) => {
+          if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault()
+            setDetailsOpen(true)
+          }
+        }}
+        onPointerDown={handleCardPointerDown}
+        onPointerUp={handleCardPointerUp}
+        onPointerCancel={() => {
+          pointerStart.current = null
+          suppressClick.current = false
+        }}
+      >
         {build.image ? (
           <button
             ref={imageButtonRef}
             className="build-image-link"
             type="button"
             aria-label={enquireTemplate.replace('{name}', name)}
-            onClick={() => setActiveImage(0)}
+            onClick={() => setDetailsOpen(true)}
           >
             <img className="build-image" src={build.image} alt={build.imageAlt} loading="lazy" />
             <span className="build-index">0{index + 1}</span>
@@ -107,6 +195,65 @@ function BuildCard({
           </details>
         )}
       </article>
+      {detailsOpen && createPortal(
+        <div
+          className="build-details-backdrop"
+          role="presentation"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setDetailsOpen(false)
+          }}
+        >
+          <section
+            className="build-details-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`build-details-title-${build.id}`}
+          >
+            <button
+              ref={detailsCloseButtonRef}
+              className="build-details-close"
+              type="button"
+              aria-label={detailsCopy.close}
+              onClick={() => setDetailsOpen(false)}
+            >
+              ×
+            </button>
+            <p className="build-category">{build.category}</p>
+            <h2 id={`build-details-title-${build.id}`}>{name}</h2>
+            <p className="build-details-description">{build.description}</p>
+            <div className="build-details-section">
+              <h3>{specsLabelTemplate.replace('{name}', name)}</h3>
+              {build.specs.length > 0 ? (
+                <ul className="build-specs">
+                  {build.specs.map((spec) => <li key={spec}>{spec}</li>)}
+                </ul>
+              ) : (
+                <p className="build-details-empty">—</p>
+              )}
+            </div>
+            <div className="build-details-section">
+              <h3>{detailsCopy.gallery}</h3>
+              {images.length ? (
+                <div className="build-details-gallery">
+                  {images.map((image, imageIndex) => (
+                    <button
+                      key={`${image}-${imageIndex}`}
+                      type="button"
+                      aria-label={`${lightboxCopy.title.replace('{name}', name)} — ${imageIndex + 1} / ${images.length}`}
+                      onClick={() => setActiveImage(imageIndex)}
+                    >
+                      <img src={image} alt={`${build.imageAlt} — ${imageIndex + 1} / ${images.length}`} />
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="build-details-empty">—</p>
+              )}
+            </div>
+          </section>
+        </div>,
+        document.body,
+      )}
       {isLightboxOpen && createPortal(
         <div
           className="build-lightbox"
