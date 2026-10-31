@@ -1,30 +1,42 @@
-# CUBER
+# CUBER — Custom PC Workshop
 
-CUBER is a React and Vite portfolio website for a custom PC workshop. The public Selected Builds section reads its content from Supabase, and `/admin` is an unlisted build-management dashboard.
+**Build Your Legacy.**
 
-## Supabase setup
+CUBER is a custom PC workshop platform focused on showcasing professionally assembled computers, carefully selected hardware components, and custom PC building services.
 
-1. Create a Supabase project.
-2. Copy `.env.example` to `.env` and set:
-   - `VITE_SUPABASE_URL` to the project URL.
-   - `VITE_SUPABASE_ANON_KEY` to the project publishable/anon key.
-3. In Supabase Authentication settings, disable **Allow new users to sign up**. Create or retain only your own Auth account using the Supabase dashboard; this website has no public registration flow.
-4. In the Supabase SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql). For an existing project, apply [`supabase/migrations/20260929_lock_admin_to_owner_email.sql`](./supabase/migrations/20260929_lock_admin_to_owner_email.sql) to replace the generic allowlist with the owner-only authorization check. The schema creates the bilingual `builds` table, row-level security policies, and the public-read/private-write `build-images` Storage bucket. It also adds `builds` to the Supabase Realtime publication so an already-open public page refreshes when builds are added, edited, or deleted.
-   To enable optional Arabic build names and descriptions on an existing project, apply [`supabase/migrations/20261015_add_arabic_build_fields.sql`](./supabase/migrations/20261015_add_arabic_build_fields.sql). Existing build content is not translated or changed; until Arabic text is entered, Arabic pages show the existing English names and descriptions. Component names and technical values remain unchanged.
-5. Restart Vite after changing `.env`, then open the unlinked `/admin` route and sign in with the authorized Auth account.
+The project aims to create a professional online presence for the workshop, allowing customers to explore completed builds, discover hardware configurations, and learn more about the services offered.
 
-The browser uses only the project URL and browser-safe anon/publishable key. It never needs the Supabase service-role key. Authentication is handled by Supabase Auth; a database-side function authorizes only the configured account, and the database and Storage row-level security policies enforce that check on every protected write.
+## Project Goals
 
-Build names, descriptions, categories, and additional specifications have Turkish and English fields. Hardware fields (CPU, GPU, RAM, and storage) are shared between languages. Uploaded image paths are stored in the build row; image files live in the `build-images` bucket.
+- Showcase custom-built PCs and completed workshop projects.
+- Present hardware configurations and component specifications.
+- Highlight build quality, cable management, and component selection.
+- Provide customers with information about available services.
+- Create a clean and professional browsing experience.
 
-No sample builds are inserted automatically. Add real portfolio builds from `/admin`; the public page will display database records in the selected language. The previous static build data file has been removed.
+## Key Features
 
-## Development
+- **PC Builds Gallery:** Explore custom PC builds with images and hardware details.
+- **Hardware Specifications:** View CPU, GPU, motherboard, RAM, storage, cooling, case, and PSU information.
+- **Build Management:** An admin dashboard for creating, editing, and managing PC builds.
+- **Multilingual Content:** Support for multiple languages.
+- **Responsive Design:** Optimized for desktop and mobile devices.
 
-```sh
-npm.cmd run dev
-npm.cmd run lint
-npm.cmd run build
-```
+## Technologies Used
 
-For production hosting, configure the host to serve the SPA entry point for `/admin` as well as `/`.
+- React
+- Vite
+- JavaScript
+- Supabase
+- Cloudflare Pages
+- Git & GitHub
+
+## Project Status
+
+Currently under development, with ongoing improvements to the website, administration system, and customer experience.
+
+## Vision
+
+CUBER is built around one idea:
+
+**A PC should be more than a collection of components. It should be a carefully designed build that reflects performance, quality, and individuality.**
